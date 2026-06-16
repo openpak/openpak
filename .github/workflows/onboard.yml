@@ -84,5 +84,17 @@ jobs:
               git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/$ORG/$appid.git"
               git push -q -f origin main )
             echo "seeded & pushed $ORG/$appid"
+
+            # 5. invite the PR submitter as maintainer of their app repo
+            author=$(gh api "repos/$INTAKE/commits/${{ github.sha }}/pulls" \
+                       --jq '.[0].user.login' 2>/dev/null || true)
+            if [ -n "$author" ] && [ "$author" != "null" ]; then
+              gh api -X PUT "repos/$ORG/$appid/collaborators/$author" \
+                -f permission=push >/dev/null \
+                && echo "invited $author as maintainer of $ORG/$appid" \
+                || echo "could not invite $author"
+            else
+              echo "submitter not resolved from merge commit — skipping invite"
+            fi
             echo "::endgroup::"
           done <<< "${{ steps.d.outputs.apps }}"
