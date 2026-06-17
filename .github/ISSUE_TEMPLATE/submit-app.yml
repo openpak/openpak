@@ -1,0 +1,52 @@
+name: Submit an app
+description: Add a new app to Openpak — we open the pull request for you.
+title: "Add <app-id>"
+labels: ["submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Openpak judges the work, not the workflow.** AI-assisted and AI-generated
+        apps are welcome — we gate on quality, maintenance, and good faith, never on
+        how the work was made.
+
+        Fill this in and we'll open the submission PR automatically. Prefer the manual
+        route? Fork, add your manifest at the repo root, and PR against `new-pr`.
+  - type: input
+    id: app_id
+    attributes:
+      label: App ID
+      description: Your reverse-DNS application id.
+      placeholder: io.github.you.App
+    validations:
+      required: true
+  - type: input
+    id: manifest_url
+    attributes:
+      label: Manifest URL
+      description: Raw URL to your Flatpak manifest (.yaml/.yml/.json).
+      placeholder: https://raw.githubusercontent.com/you/App/main/packaging/io.github.you.App.yml
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes for reviewers (optional)
+      description: Anything reviewers should know. Disclosing heavy AI involvement is
+        encouraged for context — never required, never grounds for rejection.
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirms
+    attributes:
+      label: Confirmations
+      options:
+        - label: The app is FOSS, or I am the developer / authorized to publish it.
+          required: true
+        - label: The Flatpak builds and runs locally.
+          required: true
+        - label: The manifest requests only the permissions the app needs, and sources
+            are pinned (tag + commit, or checksum).
+          required: true
+        - label: I have read the submission policy and will engage with reviewers respectfully.
+          required: true
