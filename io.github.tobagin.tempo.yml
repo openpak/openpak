@@ -1,0 +1,39 @@
+app-id: io.github.tobagin.tempo
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+command: tempo
+
+finish-args:
+  # UI permissions (minimal for GTK4/Libadwaita)
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  
+  # Audio permissions (essential for metronome)
+  - --socket=pulseaudio
+  - --filesystem=xdg-run/pipewire-0:ro
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /share/pkgconfig
+  - /share/aclocal
+  - /man
+  - /share/man
+  - /share/gtk-doc
+  - /share/vala
+  - /share/devhelp
+  - '*.la'
+  - '*.a'
+
+modules:
+  # Main application (PyGObject already included in GNOME Platform)
+  - name: tempo
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/tobagin/Tempo.git
+        tag: v1.5.3
+        commit: dd76fddb6d90e0428c3f00ebe2b48defd06eb047
